@@ -9,7 +9,15 @@ var server = http.createServer(function(req, res) {
 	var rasp = url.parse(req.url, true).query;
 	var comando = rasp.porta4;
 	var porcao = rasp.porcao;
-	ligaLED(comando, porcao);
+	var nome = rasp.nome;
+	var horario = rasp.horario;
+
+	if(comando != null)
+		ligaLED(comando, porcao);
+	else
+	var resposta = gravaHorario(nome, porcao, horario);
+
+	res.send(resposta);
 	res.end();
 }).listen(3000, function() {
 	    console.log('Server is running at 3000')
@@ -17,12 +25,21 @@ var server = http.createServer(function(req, res) {
 
 
 function ligaLED(comando, porcao){
+	console.log("ligando led")
 	LED.writeSync(parseInt(comando));
 	setTimeout(desligaLED, 1000*parseInt(porcao));
 }
 
 function desligaLED(){
 	LED.writeSync(0);
+}
+
+function gravaHorario(nome, porcao, horario){
+	console.log("nome: "+nome);
+	console.log("porcao: "+porcao);
+	console.log("horario: "+horario);
+
+	return 'salvo'
 }
 
 process.on('SIGINT', function () { //on ctrl+c
