@@ -12,13 +12,14 @@ app.get('/', function (req, res) {
 	var comando = query.porta4;
 	var porcao = query.porcao;
 	var nome = query.nome;
-	var horario = query.horario;
+	var hora = query.hora;
+	var min = query.min;
 	var resposta = null;
 
 	if(comando != null)
 		resposta = ligaLED(comando, porcao);
 	else
-		resposta = gravaHorario(nome, porcao, horario);
+		resposta = gravaHorario(nome, porcao, hora, min);
 
 	res.send(resposta);
 })
@@ -35,13 +36,16 @@ function desligaLED(){
 	LED.writeSync(0);
 }
 
-function gravaHorario(nome, porcao, horario){
+function gravaHorario(nome, porcao, hora, min){
 	console.log("nome: "+nome);
 	console.log("porcao: "+porcao);
-	console.log("horario: "+horario);
+	console.log("hora: "+hora);
+	console.log("minuto: "+min);
 
-	shell.echo("hello dude");
-	shell.cat("README.md");
+	//Ja existe esse horario marcado?
+	//shell.exec("crontab -l | grep \""+min+" "+hora+"\"");
+	shell.exec("crontab -l | { cat; echo \""+min+" "+hora+" * * * cd scripts-motor && python motor4.py\"; } | crontab -");
+
 	return 'horario gravado\n';
 }
 
