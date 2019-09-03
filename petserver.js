@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const url = require('url');
+const fs = require("fs");
+let shell = require('shelljs');
 
 const Gpio = require('onoff').Gpio;
 const LED = new Gpio(4, 'out');
@@ -38,6 +40,8 @@ function gravaHorario(nome, porcao, horario){
 	console.log("porcao: "+porcao);
 	console.log("horario: "+horario);
 
+	shell.echo("hello dude");
+	shell.cat("README.md");
 	return 'horario gravado\n';
 }
 
