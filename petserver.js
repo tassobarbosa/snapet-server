@@ -44,9 +44,9 @@ function gravaHorario(nome, porcao, hora, min){
 
 	//Ja existe esse horario marcado?
 	//shell.exec("crontab -l | grep \""+min+" "+hora+"\"");
-	shell.exec("crontab -l | { cat; echo \""+min+" "+hora+" * * * cd scripts-motor && python motor4.py\"; } | crontab -");
+	shell.exec("crontab -l | { cat; echo \""+min+" "+hora+" * * * cd scripts-motor && python motor"+porcao+".py\"; } | crontab -");
 
-	return 'horario gravado\n';
+	return 'refeicao: '+nome+' gravada com sucesso!';
 }
 
 
