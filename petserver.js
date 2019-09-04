@@ -18,8 +18,13 @@ app.get('/', function (req, res) {
 
 	if(comando != null)
 		resposta = ligaLED(comando, porcao);
-	else
-		resposta = gravaHorario(nome, porcao, hora, min);
+	else{
+		if(porcao == null)
+			resposta = deletaHorario(nome);
+		else
+			resposta = gravaHorario(nome, porcao, hora, min);
+	}
+
 
 	res.send(resposta);
 })
@@ -44,11 +49,16 @@ function gravaHorario(nome, porcao, hora, min){
 
 	//Ja existe esse horario marcado?
 	//shell.exec("crontab -l | grep \""+min+" "+hora+"\"");
-	shell.exec("crontab -l | { cat; echo \""+min+" "+hora+" * * * cd scripts-motor && python motor"+porcao+".py\"; } | crontab -");
+	shell.exec("crontab -l | { cat; echo \""+min+" "+hora+" * * * cd scripts-motor && python motor"+porcao+".py #"+nome+"\"; } | crontab -");
 
 	return 'refeicao: '+nome+' gravada com sucesso!';
 }
 
+function deletaHorario(nome){
+	console.log("Vou deletar o: "+nome);
+
+	return 'refeicao: '+nome+" deletada!";
+}
 
 process.on('SIGINT', function(){
 	LED.writeSync(0);
