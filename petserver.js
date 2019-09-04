@@ -56,7 +56,7 @@ function gravaHorario(nome, porcao, hora, min){
 
 function deletaHorario(nome){
 	console.log("Vou deletar o: "+nome);
-
+	shell.exec("crontab -l | grep -v "+nome+" | crontab -");
 	return 'refeicao: '+nome+" deletada!";
 }
 
