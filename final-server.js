@@ -12,6 +12,7 @@ var server = http.createServer(function(req, res) {
 		var comando = query.porta4;
 		var porcao = query.porcao;
 		var nome = query.nome;
+		var tipo = query.tipo;
 		var hora = query.hora;
 		var min = query.min;
 		var resposta = null;
@@ -22,7 +23,7 @@ var server = http.createServer(function(req, res) {
 			if(porcao == null)
 				resposta = deletaHorario(nome);
 			else
-				resposta = gravaHorario(nome, porcao, hora, min);
+				resposta = gravaHorario(nome, porcao, hora, min,tipo);
 		}
 
 
@@ -36,7 +37,7 @@ var server = http.createServer(function(req, res) {
 function ligaLED(comando, porcao){
 		console.log("ligando led");
 		LED.writeSync(parseInt(comando));
-		setTimeout(desligaLED, 1000*parseInt(porcao));
+		setTimeout(desligaLED, 4000*parseInt(porcao));
 
 		return 'comando executado\n';
 }
@@ -45,15 +46,16 @@ function desligaLED(){
 		LED.writeSync(0);
 }
 
-function gravaHorario(nome, porcao, hora, min){
+function gravaHorario(nome, porcao, hora, min, tipo){
 	console.log("nome: "+nome);
 	console.log("porcao: "+porcao);
+	console.log("tipo: "+tipo);
 	console.log("hora: "+hora);
 	console.log("minuto: "+min);
 
 	//Ja existe esse horario marcado?
 	//shell.exec("crontab -l | grep \""+min+" "+hora+"\"");
-	shell.exec("crontab -l | { cat; echo \""+min+" "+hora+" * * * cd scripts-motor && python motor"+porcao+".py #"+nome+"\"; } | crontab -");
+	shell.exec("crontab -l | { cat; echo \""+min+" "+hora+" * * * cd scripts-motor && python motor"+porcao+tipo+".py #"+nome+"\"; } | crontab -");
 	return 'refeicao: '+nome+' gravada com sucesso!';
 }
 
